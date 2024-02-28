@@ -48,7 +48,12 @@ abstract class DefaultGameObject implements GameObject {
         return
     }
 
-    onCollision(collision: CollisionInfo) {
+    onCollisionEnter(collision: CollisionInfo) {
+
+    }
+
+    onCollisionExit() {
+
     }
 
     setParent(parent: GameObject) {

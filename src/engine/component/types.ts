@@ -5,7 +5,8 @@ export interface GameObject {
     initialize: () => void;
     update: (time: number) => void;
     fixedUpdate: () => void;
-    onCollision: (collision: CollisionInfo) => void;
+    onCollisionEnter: (collision: CollisionInfo) => void;
+    onCollisionExit: () => void;
     getParent: () => GameObject
     setParent: (parent: GameObject) => void
     getX(): number;

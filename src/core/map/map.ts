@@ -1,23 +1,57 @@
 import DefaultGameObject from "../../engine/component/default";
 import { Renderer } from "../../engine/renderer/types";
+import PlayerCollider from "../player/collider";
+import PlayerController from "../player/controller";
 import DefaultPlayer from "../player/player";
 
+const defaultPlayerSize = 20;
+
 class DefaultMap extends DefaultGameObject {
-    renderer: Renderer
-    constructor(renderer: Renderer) {
-        super("player-map")
-        this.renderer = renderer
+  renderer: Renderer;
+  maxPlayers: number;
+
+  constructor(renderer: Renderer, maxPlayers: number) {
+    super("player-map");
+    this.renderer = renderer;
+    this.maxPlayers = maxPlayers;
+  }
+
+  initialize() {
+    //setup players and player controllers
+    for (let i = 0; i < this.maxPlayers; i++) {
+      this.addComponent(
+        new DefaultPlayer(
+          this.renderer,
+          Math.random() * this.renderer.getWidth(),
+          Math.random() * this.renderer.getHeight(),
+          defaultPlayerSize,
+          "#000000",
+        ),
+      );
     }
 
-    initialize() {
-        this.addComponent(new DefaultPlayer(this.renderer, Math.random() * 1024, Math.random() * 576, 20))
-    }
-    fixedUpdate() {
-        this.updateFixedComponents()
-    }
-    update(time: number) {
-        this.updateComponents(time)
-    }
+    const p = new DefaultPlayer(
+      this.renderer,
+      Math.random() * this.renderer.getWidth(),
+      Math.random() * this.renderer.getHeight(),
+      defaultPlayerSize,
+      "#325ca8",
+      true,
+    );
+
+    const playerCollider = new PlayerCollider(this, defaultPlayerSize);
+    const c = new PlayerController();
+    p.addComponents([playerCollider, c]);
+
+    this.addComponent(p);
+  }
+
+  fixedUpdate() {
+    this.updateFixedComponents();
+  }
+  update(time: number) {
+    this.updateComponents(time);
+  }
 }
 
 export default DefaultMap;

@@ -1,5 +1,7 @@
 export interface Renderer {
-    createView: () => void;
-    clear: () => void;
-    createCircle: (x: number, y: number, radius: number, fill: string) => void;
+  createView: () => void;
+  clear: () => void;
+  createCircle: (x: number, y: number, radius: number, fill: string) => void;
+  getHeight: () => number;
+  getWidth: () => number;
 }
