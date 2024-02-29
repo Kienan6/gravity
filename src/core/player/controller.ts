@@ -7,7 +7,7 @@ class PlayerController extends DefaultGameObject {
   constructor() {
     super("player-controller");
     this.movement = { x: 0, y: 0 };
-    this.speed = 1; //m/s
+    this.speed = 40; //m/s
   }
   //TODO - switch case - handle double inputs
   initialize() {

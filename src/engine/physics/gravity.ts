@@ -1,23 +1,40 @@
 import DefaultGameObject from "../component/default";
+import { GameObject } from "../component/types";
 
 class GravityPhysics extends DefaultGameObject {
   gravity: number;
   time: number = 6.6 / 1000;
-  constructor() {
+  objects: GameObject[];
+
+  constructor(objects: GameObject[]) {
     super("physics-gravity");
     this.gravity = 9.8; //9.8 m/s^2
+    this.objects = objects;
   }
+  //TODO - vector lib
+  update(time: number): void {
+    const parentX = this.parent.getX();
+    const parentY = this.parent.getY();
+    this.objects.forEach((o) => {
+      const distX = parentX - o.getX();
+      const distY = parentY - o.getY();
+      //euclidian distance
+      const dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+      if (dist > 5 && dist < 200) {
+        const force =
+          (this.gravity * o.getMass() * this.parent.getMass()) / dist;
 
-  update(time: number) {
-    const timeInSec = time / 1000;
-    //apply gravity to each component
-    this.components.forEach((c) => {
-      const velY = c.getVelocity().y - this.gravity * timeInSec;
-      c.setVelocity(c.getVelocity().x, velY);
-      const newY =
-        c.getVelocity().y * timeInSec -
-        (1 / 2) * (this.gravity * Math.pow(this.time, 2));
-      c.setY(newY);
+        //TODO - apply the force
+        const normalX = distX / dist;
+        const normalY = distY / dist;
+
+        const accelerationX = (normalX / o.getMass()) * force; //force / mass = acceleration
+        const accerationY = (normalY / o.getMass()) * force;
+
+        o.setVelocity(-accelerationX * time, -accerationY * time);
+      } else {
+        o.setVelocity(0, 0);
+      }
     });
   }
 }

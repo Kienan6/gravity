@@ -1,4 +1,5 @@
 import DefaultGameObject from "../../engine/component/default";
+import GravityPhysics from "../../engine/physics/gravity";
 import RigidBody from "../../engine/physics/rigidbody";
 import { Renderer } from "../../engine/renderer/types";
 import PlayerCollider from "../player/collider";
@@ -20,15 +21,16 @@ class DefaultMap extends DefaultGameObject {
   initialize() {
     //setup players and player controllers
     for (let i = 0; i < this.maxPlayers; i++) {
-      this.addComponent(
-        new DefaultPlayer(
-          this.renderer,
-          Math.random() * this.renderer.getWidth(),
-          Math.random() * this.renderer.getHeight(),
-          defaultPlayerSize,
-          "#000000",
-        ),
+      const rb = new RigidBody();
+      const p = new DefaultPlayer(
+        this.renderer,
+        Math.random() * this.renderer.getWidth(),
+        Math.random() * this.renderer.getHeight(),
+        defaultPlayerSize,
+        "#000000",
       );
+      p.addComponent(rb);
+      this.addComponent(p);
     }
 
     const p = new DefaultPlayer(
@@ -43,8 +45,9 @@ class DefaultMap extends DefaultGameObject {
     const playerCollider = new PlayerCollider(this, defaultPlayerSize);
     const controller = new PlayerController();
     const rigidBody = new RigidBody();
+    const gravity = new GravityPhysics(this.getComponentsByTag("player"));
 
-    p.addComponents([playerCollider, rigidBody, controller]);
+    p.addComponents([playerCollider, rigidBody, controller, gravity]);
     this.addComponent(p);
   }
 

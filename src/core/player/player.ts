@@ -29,6 +29,10 @@ class DefaultPlayer extends DefaultGameObject implements Player {
     this.collisions = [];
   }
 
+  initialize(): void {
+    this.setMass(20);
+  }
+
   getRadius() {
     return this.radius;
   }

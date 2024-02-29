@@ -65,13 +65,11 @@ abstract class DefaultGameObject implements GameObject {
   }
 
   update(time: number) {
-    if (this.getVelocity().x !== 0) {
-      this.setX(this.getX() + this.getVelocity().x * time);
-    }
-    if (this.getVelocity().y !== 0) {
-      this.setX(this.getY() + this.getVelocity().y * time);
-    }
     return;
+  }
+
+  getComponentsByTag(tag: string): GameObject[] {
+    return this.components.filter((c) => c.getTag() === tag);
   }
 
   onCollisionEnter(collision: CollisionInfo) {}

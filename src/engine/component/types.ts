@@ -9,6 +9,7 @@ export interface GameObject {
   onCollisionExit: (collision: CollisionInfo) => void;
   getParent: () => GameObject;
   setParent: (parent: GameObject) => void;
+  getComponentsByTag(tag: string): GameObject[];
   getX(): number;
   setX(x: number): void;
   getY(): number;
