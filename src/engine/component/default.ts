@@ -15,7 +15,6 @@ abstract class DefaultGameObject implements GameObject {
     console.log(`Initialized ${tag}`);
     this.tag = tag;
     this.components = [];
-    this.parent = null;
     this.velocity = { x: 0, y: 0 };
     this.mass = 0;
   }
