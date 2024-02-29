@@ -20,7 +20,7 @@ class GravityPhysics extends DefaultGameObject {
       const distY = parentY - o.getY();
       //euclidian distance
       const dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
-      if (dist > 5 && dist < 200) {
+      if (dist > 5 && dist < 400) {
         const force =
           (this.gravity * o.getMass() * this.parent.getMass()) / dist;
 

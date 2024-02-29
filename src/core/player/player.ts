@@ -30,6 +30,9 @@ class DefaultPlayer extends DefaultGameObject implements Player {
   }
 
   initialize(): void {
+    if (this.tag === "player-self") {
+      this.setMass(50);
+    }
     this.setMass(20);
   }
 
