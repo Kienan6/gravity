@@ -45,7 +45,9 @@ class CircleCollider extends DefaultGameObject {
           }
         } else if (this.collisions.includes(o)) {
           this.collisions.splice(this.collisions.indexOf(o), 1);
-          this.object.onCollisionExit();
+          this.object.onCollisionExit({
+            collidingObject: o,
+          });
         }
       });
     }

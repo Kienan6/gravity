@@ -32,8 +32,8 @@ class PlayerCollider extends DefaultGameObject {
     this.parent.onCollisionEnter(collision);
   }
 
-  onCollisionExit(): void {
-    this.parent.onCollisionExit();
+  onCollisionExit(collision: CollisionInfo): void {
+    this.parent.onCollisionExit(collision);
   }
 
   fixedUpdate(): void {

@@ -8,6 +8,7 @@ class DefaultPlayer extends DefaultGameObject implements Player {
   radius: number;
   color: string;
   originalColor: string;
+  collisions: CollisionInfo[];
 
   constructor(
     renderer: Renderer,
@@ -25,6 +26,7 @@ class DefaultPlayer extends DefaultGameObject implements Player {
     this.components = [];
     this.color = color;
     this.originalColor = color;
+    this.collisions = [];
   }
 
   getRadius() {
@@ -32,12 +34,15 @@ class DefaultPlayer extends DefaultGameObject implements Player {
   }
 
   onCollisionEnter(collision: CollisionInfo): void {
-    console.log(collision);
+    this.collisions.push(collision);
     this.color = "#32a889";
   }
 
-  onCollisionExit(): void {
-    this.color = this.originalColor;
+  onCollisionExit(collision: CollisionInfo): void {
+    this.collisions.splice(this.collisions.indexOf(collision), 1);
+    if (this.collisions.length === 0) {
+      this.color = this.originalColor;
+    }
   }
 
   onDeath: () => void;

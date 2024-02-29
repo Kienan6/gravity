@@ -1,4 +1,5 @@
 import DefaultGameObject from "../../engine/component/default";
+import RigidBody from "../../engine/physics/rigidbody";
 import { Renderer } from "../../engine/renderer/types";
 import PlayerCollider from "../player/collider";
 import PlayerController from "../player/controller";
@@ -40,9 +41,10 @@ class DefaultMap extends DefaultGameObject {
     );
 
     const playerCollider = new PlayerCollider(this, defaultPlayerSize);
-    const c = new PlayerController();
-    p.addComponents([playerCollider, c]);
+    const controller = new PlayerController();
+    const rigidBody = new RigidBody();
 
+    p.addComponents([playerCollider, rigidBody, controller]);
     this.addComponent(p);
   }
 

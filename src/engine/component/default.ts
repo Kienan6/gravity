@@ -1,89 +1,111 @@
 import { CollisionInfo } from "../physics/types";
-import { GameObject } from "./types"
-
+import { GameObject } from "./types";
 
 //default game object class that most if not all game objects extend
 abstract class DefaultGameObject implements GameObject {
-    components: GameObject[]
-    parent: GameObject
-    tag: string;
-    x: number
-    y: number
-    constructor(tag: string) {
-        console.log(`Initialized ${tag}`)
-        this.tag = tag
-        this.components = []
-        this.parent = null
-    }
+  components: GameObject[];
+  parent: GameObject;
+  tag: string;
+  x: number;
+  y: number;
+  velocity: { x: number; y: number };
+  mass: number;
 
-    initialize() {
-        return
-    }
+  constructor(tag: string) {
+    console.log(`Initialized ${tag}`);
+    this.tag = tag;
+    this.components = [];
+    this.parent = null;
+    this.velocity = { x: 0, y: 0 };
+    this.mass = 0;
+  }
 
-    getX(): number {
-        return this.x
-    }
+  initialize() {
+    return;
+  }
 
-    setX(x: number) {
-        this.x = x
-    }
+  getX(): number {
+    return this.x;
+  }
 
-    getY(): number {
-        return this.y
-    }
+  setX(x: number) {
+    this.x = x;
+  }
 
-    setY(y: number) {
-        this.y = y
-    }
+  getY(): number {
+    return this.y;
+  }
 
-    getTag(): string {
-        return this.tag
-    }
+  setY(y: number) {
+    this.y = y;
+  }
 
-    fixedUpdate() {
-        return
-    }
+  getTag(): string {
+    return this.tag;
+  }
 
-    update(time: number) {
-        return
-    }
+  setMass(mass: number) {
+    this.mass = mass;
+  }
 
-    onCollisionEnter(collision: CollisionInfo) {
+  getMass() {
+    return this.mass;
+  }
 
-    }
+  getVelocity() {
+    return this.velocity;
+  }
 
-    onCollisionExit() {
+  setVelocity(x: number, y: number) {
+    this.velocity = { x, y };
+  }
 
-    }
+  fixedUpdate() {
+    return;
+  }
 
-    setParent(parent: GameObject) {
-        this.parent = parent
+  update(time: number) {
+    if (this.getVelocity().x !== 0) {
+      this.setX(this.getX() + this.getVelocity().x * time);
     }
+    if (this.getVelocity().y !== 0) {
+      this.setX(this.getY() + this.getVelocity().y * time);
+    }
+    return;
+  }
 
-    getParent() {
-        return this.parent
-    }
-    //TODO - another limitation
-    updateFixedComponents() {
-        this.components.forEach((c) => c.fixedUpdate())
-    }
+  onCollisionEnter(collision: CollisionInfo) {}
 
-    //TODO - current limitation this must be called
-    updateComponents(time: number) {
-        this.components.forEach((c) => c.update(time))
-    }
+  onCollisionExit(collision: CollisionInfo) {}
 
-    addComponent(component: GameObject) {
-        component.setParent(this)
-        component.initialize()
-        this.components.push(component)
-    }
-    
-    addComponents(components: GameObject[]) {
-        components.forEach((c) => {
-            this.addComponent(c)
-        })
-    }
+  setParent(parent: GameObject) {
+    this.parent = parent;
+  }
+
+  getParent() {
+    return this.parent;
+  }
+  //TODO - another limitation
+  updateFixedComponents() {
+    this.components.forEach((c) => c.fixedUpdate());
+  }
+
+  //TODO - current limitation this must be called
+  updateComponents(time: number) {
+    this.components.forEach((c) => c.update(time));
+  }
+
+  addComponent(component: GameObject) {
+    component.setParent(this);
+    component.initialize();
+    this.components.push(component);
+  }
+
+  addComponents(components: GameObject[]) {
+    components.forEach((c) => {
+      this.addComponent(c);
+    });
+  }
 }
 
-export default DefaultGameObject
+export default DefaultGameObject;
