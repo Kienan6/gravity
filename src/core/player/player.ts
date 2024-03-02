@@ -1,9 +1,15 @@
 import CircleGameObject from "../../engine/component/circle";
-import DefaultGameObject from "../../engine/component/defaults/object";
-import { Scene } from "../../engine/component/defaults/types";
+import { GameObject, Scene } from "../../engine/component/defaults/types";
 import { CircleCollider, CollisionInfo } from "../../engine/physics/types";
 import { Renderer } from "../../engine/renderer/types";
+import CollisionMechanic, {
+  CollisionMechanicCtx,
+} from "../mechanics/collision_ mass";
+import MassMechanic from "../mechanics/collider_ size";
+import { Mechanic } from "../mechanics/types";
 import { Player } from "./types";
+import CollisionMassMechanic from "../mechanics/collision_ mass";
+import ColliderSizeMechanic from "../mechanics/collider_ size";
 
 interface DefaultPlayerParams {
   startX: number;
@@ -15,6 +21,7 @@ interface DefaultPlayerParams {
   isSelf?: boolean;
 }
 
+//TODO create visual class with draw method and add to gameobject
 class DefaultPlayer extends CircleGameObject implements Player {
   renderer: Renderer;
   color: string;
@@ -24,6 +31,8 @@ class DefaultPlayer extends CircleGameObject implements Player {
   collisions: CollisionInfo[];
   minMass: number;
   isDead: boolean;
+  onMassMechanics: Mechanic<GameObject>;
+  onCollisionMechanics: Mechanic<CollisionMechanicCtx>;
 
   constructor(renderer: Renderer, scene: Scene, params: DefaultPlayerParams) {
     super(`player${params.isSelf ? "-self" : ""}`, scene);
@@ -41,44 +50,33 @@ class DefaultPlayer extends CircleGameObject implements Player {
   }
 
   initialize(): void {
-    this.setColliderRadius(this.radius);
-  }
-
-  setColliderRadius(r: number): void {
-    const collider = this.getComponentByTag<CircleCollider>("circle-collider");
-    if (collider) {
-      collider.setRadius(r);
-    }
+    this.onMassMechanics = new ColliderSizeMechanic(this.scaleFn);
+    this.onCollisionMechanics = new CollisionMassMechanic();
   }
 
   setMass(mass: number): void {
-    this.radius = this.scaleFn(mass);
-    this.setColliderRadius(this.radius);
     this.mass = mass;
+    this.radius = this.scaleFn(this.mass);
+    this.onMassMechanics.handle(this);
   }
 
   onCollisionEnter(collision: CollisionInfo): void {
-    const obj = collision.collidingObject;
-    const newObjMass = obj.getMass() / 2;
-    obj.setMass(newObjMass);
-    this.setMass(this.getMass() + newObjMass);
     this.collisions.push(collision);
+    this.onCollisionMechanics.handle({
+      collision: collision,
+      object: this,
+    });
     this.color = "#32a889";
   }
 
   onCollisionExit(collision: CollisionInfo): void {
     this.collisions.splice(this.collisions.indexOf(collision), 1);
-    console.log("exited");
-    console.log(collision);
-    console.log(this.collisions);
     if (this.collisions.length === 0) {
       this.color = this.originalColor;
     }
   }
 
   onDeath() {
-    console.log("death");
-    console.log(this);
     this.destroy();
   }
   onSpawn: () => void;
@@ -89,12 +87,11 @@ class DefaultPlayer extends CircleGameObject implements Player {
   }
 
   update(time: number) {
-    if (!this.isDead) {
-      if (this.mass <= this.minMass) {
-        this.onDeath();
-      }
-      this.renderer.createCircle(this.x, this.y, this.radius, this.color);
+    if (this.mass <= this.minMass) {
+      this.onDeath();
     }
+    this.renderer.createCircle(this.x, this.y, this.radius, this.color);
+
     this.updateComponents(time);
   }
 }

@@ -1,7 +1,7 @@
 import DefaultComponent from "../component/defaults/component";
 import { GameObject, Scene } from "../component/defaults/types";
 import { CircleObject } from "../component/types";
-import { CircleCollider } from "./types";
+import { CircleCollider, CollisionInfo } from "./types";
 
 // interface CircleColliderParams {
 //   distFn: (o: GameObject) => number;
@@ -11,7 +11,7 @@ class DefaultCircleCollider extends DefaultComponent implements CircleCollider {
   scene: Scene;
   radius: number;
   filterTag: string;
-  collisions: GameObject[];
+  collisions: CircleObject[];
 
   constructor(scene: Scene, initialRadius: number, tag: string) {
     super("circle-collider");
@@ -29,9 +29,30 @@ class DefaultCircleCollider extends DefaultComponent implements CircleCollider {
     this.radius = r;
   }
 
+  checkForRemovedItems() {
+    const toRemoveIndices: number[] = [];
+    const items = this.scene.getGameObjectsByTag<CircleObject>(this.filterTag);
+    this.collisions.forEach((c, i) => {
+      //collision item is no longer in scene
+      if (!items.includes(c)) {
+        toRemoveIndices.push(i);
+      }
+    });
+
+    //remove
+    toRemoveIndices.forEach((index) => {
+      //call proper exit
+      this.gameObject.onCollisionExit({
+        collidingObject: this.collisions[index],
+      });
+      this.collisions.splice(index, 1);
+    });
+  }
+
   fixedUpdate(): void {
     //very naive approach to collision
     if (this.gameObject) {
+      this.checkForRemovedItems();
       //matching tags
       const filteredItems = this.scene.getGameObjectsByTag<CircleObject>(
         this.filterTag,

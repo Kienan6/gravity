@@ -24,6 +24,9 @@ class PlayerController extends DefaultComponent {
       if (e.code === "KeyA") {
         this.movement = { x: -1, y: this.movement.y };
       }
+      if (e.code === "ShiftLeft") {
+        this.speed = 80;
+      }
     });
 
     window.addEventListener("keyup", (e) => {
@@ -38,6 +41,9 @@ class PlayerController extends DefaultComponent {
       }
       if (e.code === "KeyA") {
         this.movement = { x: 0, y: this.movement.y };
+      }
+      if (e.code === "ShiftLeft") {
+        this.speed = 50;
       }
     });
   }

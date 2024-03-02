@@ -86,6 +86,7 @@ abstract class DefaultGameObject implements GameObject {
 
   destroy(): void {
     this.scene.removeGameObject(this);
+    this.components = [];
   }
 
   getComponentByTag<T = Component>(tag: string): T {

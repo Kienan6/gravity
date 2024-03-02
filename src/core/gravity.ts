@@ -54,7 +54,11 @@ class Gravity extends Game {
     //const playerCollider = new PlayerCollider(this.map, scaleDefault(scale));
     const controller = new PlayerController();
     const rigidBody = new RigidBody();
-    const collider = new CircleCollider(this.map, 0, "player");
+    const collider = new CircleCollider(
+      this.map,
+      scaleDefault(scale)(50),
+      "player",
+    );
     const gravity = new GravityPhysics(this.map.getGameObjectsByTag("player"), {
       maxDist: 400,
       minDist: 5,
