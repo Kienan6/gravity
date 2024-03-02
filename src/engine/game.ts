@@ -1,10 +1,10 @@
-import { GameObject } from "./component/types";
+import { GameObject, LifeCycle } from "./component/defaults/types";
 import { Renderer } from "./renderer/types";
 
 //TODO - Add a time class thats updated by the main gameloop
 class Game {
   renderer: Renderer;
-  objects: GameObject[];
+  objects: LifeCycle[];
   lastRender: number;
   lastFixed: number;
   frameRateMs: number;
@@ -21,12 +21,12 @@ class Game {
     window.requestAnimationFrame((t) => this.gameLoop(t));
   }
 
-  addGameObject(obj: GameObject) {
+  addObject(obj: LifeCycle) {
     obj.initialize();
     this.objects.push(obj);
   }
 
-  addGameObjects(obj: GameObject[]) {
+  addObjects(obj: LifeCycle[]) {
     obj.forEach((o) => {
       o.initialize();
     });

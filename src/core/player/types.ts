@@ -1,8 +1,7 @@
-import { GameObject } from "../../engine/component/types";
+import { GameObject } from "../../engine/component/defaults/types";
 
 export interface Player {
-    onDeath: () => void;
-    onSpawn: () => void;
-    onContact: () => void;
-    getRadius: () => number;
+  onDeath: () => void;
+  onSpawn: () => void;
+  onContact: () => void;
 }

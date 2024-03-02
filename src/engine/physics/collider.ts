@@ -1,51 +1,58 @@
-import DefaultGameObject from "../component/default";
-import { GameObject } from "../component/types";
-import { CollisionInfo } from "./types";
+import DefaultComponent from "../component/defaults/component";
+import { GameObject, Scene } from "../component/defaults/types";
+import { CircleObject } from "../component/types";
+import { CircleCollider } from "./types";
 
-class CircleCollider extends DefaultGameObject {
-  space: GameObject[];
-  object: GameObject;
+// interface CircleColliderParams {
+//   distFn: (o: GameObject) => number;
+// }
+
+class DefaultCircleCollider extends DefaultComponent implements CircleCollider {
+  scene: Scene;
   radius: number;
-  tags: string[];
+  filterTag: string;
   collisions: GameObject[];
 
-  constructor(
-    object: GameObject,
-    space: GameObject[],
-    radius: number,
-    tags: string[],
-  ) {
-    super("player-collider");
-    this.space = space;
-    this.object = object;
-    this.tags = tags;
-    this.radius = radius;
+  constructor(scene: Scene, initialRadius: number, tag: string) {
+    super("circle-collider");
+    this.scene = scene;
+    this.filterTag = tag;
     this.collisions = [];
+    this.radius = initialRadius;
+  }
+
+  getRadius() {
+    return this.radius;
+  }
+
+  setRadius(r: number) {
+    this.radius = r;
   }
 
   fixedUpdate(): void {
     //very naive approach to collision
-    if (this.object) {
+    if (this.gameObject) {
       //matching tags
-      const filteredItems = this.space.filter((o) =>
-        this.tags.includes(o.getTag()),
+      const filteredItems = this.scene.getGameObjectsByTag<CircleObject>(
+        this.filterTag,
       );
+
       filteredItems.forEach((o) => {
-        const distX = this.object.getX() - o.getX();
-        const distY = this.object.getY() - o.getY();
+        const distX = this.gameObject.getX() - o.getX();
+        const distY = this.gameObject.getY() - o.getY();
 
         const distance = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
 
-        if (distance <= this.radius * 2) {
+        if (distance <= this.radius + o.getRadius()) {
           if (!this.collisions.includes(o)) {
             this.collisions.push(o);
-            this.object.onCollisionEnter({
+            this.gameObject.onCollisionEnter({
               collidingObject: o,
             });
           }
         } else if (this.collisions.includes(o)) {
           this.collisions.splice(this.collisions.indexOf(o), 1);
-          this.object.onCollisionExit({
+          this.gameObject.onCollisionExit({
             collidingObject: o,
           });
         }
@@ -54,4 +61,4 @@ class CircleCollider extends DefaultGameObject {
   }
 }
 
-export default CircleCollider;
+export default DefaultCircleCollider;

@@ -1,5 +1,10 @@
-import { GameObject } from "../component/types";
+import { GameObject } from "../component/defaults/types";
 
 export type CollisionInfo = {
-    collidingObject: GameObject
+  collidingObject: GameObject;
+};
+
+export interface CircleCollider {
+  getRadius: () => number;
+  setRadius: (r: number) => void;
 }

@@ -1,19 +1,19 @@
-import DefaultGameObject from "../component/default";
+import DefaultComponent from "../component/defaults/component";
 
-class RigidBody extends DefaultGameObject {
+class RigidBody extends DefaultComponent {
   constructor() {
     super("rigid-body");
   }
 
   update(time: number): void {
-    if (this.parent.getVelocity().x !== 0) {
-      this.parent.setX(
-        this.parent.getX() + this.parent.getVelocity().x * (time / 100),
+    if (this.gameObject.getVelocity().x !== 0) {
+      this.gameObject.setX(
+        this.gameObject.getX() + this.gameObject.getVelocity().x * (time / 100),
       );
     }
-    if (this.parent.getVelocity().y !== 0) {
-      this.parent.setY(
-        this.parent.getY() + this.parent.getVelocity().y * (time / 100),
+    if (this.gameObject.getVelocity().y !== 0) {
+      this.gameObject.setY(
+        this.gameObject.getY() + this.gameObject.getVelocity().y * (time / 100),
       );
     }
   }

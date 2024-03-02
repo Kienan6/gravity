@@ -1,8 +1,7 @@
 import Gravity from "./core/gravity";
-import DefaultMap from "./core/map/map";
 
 function main() {
-  let game = new Gravity(100);
+  let game = new Gravity(20);
   game.start();
   //while (document.getElementById("root") === null) {setTimeout(() => {return}, 1000)}
   window.addEventListener("keydown", (e) => {

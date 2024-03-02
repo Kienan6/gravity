@@ -1,6 +1,6 @@
-import DefaultGameObject from "../../engine/component/default";
+import DefaultComponent from "../../engine/component/defaults/component";
 
-class PlayerController extends DefaultGameObject {
+class PlayerController extends DefaultComponent {
   movement: { x: number; y: number };
   speed: number;
 
@@ -44,22 +44,22 @@ class PlayerController extends DefaultGameObject {
 
   update(time: number) {
     if (this.movement.y === 1) {
-      this.parent.setVelocity(this.parent.getVelocity().x, -this.speed);
+      this.gameObject.setVelocity(this.gameObject.getVelocity().x, -this.speed);
     } else if (this.movement.y === -1) {
-      this.parent.setVelocity(this.parent.getVelocity().x, this.speed);
+      this.gameObject.setVelocity(this.gameObject.getVelocity().x, this.speed);
     }
 
     if (this.movement.x === 1) {
-      this.parent.setVelocity(this.speed, this.parent.getVelocity().y);
+      this.gameObject.setVelocity(this.speed, this.gameObject.getVelocity().y);
     } else if (this.movement.x === -1) {
-      this.parent.setVelocity(-this.speed, this.parent.getVelocity().y);
+      this.gameObject.setVelocity(-this.speed, this.gameObject.getVelocity().y);
     }
 
     if (this.movement.x === 0) {
-      this.parent.setVelocity(0, this.parent.getVelocity().y);
+      this.gameObject.setVelocity(0, this.gameObject.getVelocity().y);
     }
     if (this.movement.y === 0) {
-      this.parent.setVelocity(this.parent.getVelocity().x, 0);
+      this.gameObject.setVelocity(this.gameObject.getVelocity().x, 0);
     }
   }
 }
