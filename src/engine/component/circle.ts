@@ -13,6 +13,16 @@ class CircleGameObject extends DefaultGameObject implements CircleObject {
   setRadius(r: number): void {
     this.radius = r;
   }
+
+  //default impl
+  draw(): void {
+    this.getRenderer().createCircle(
+      this.pos.getX(),
+      this.pos.getY(),
+      this.radius,
+      "#00ff22",
+    );
+  }
 }
 
 export default CircleGameObject;

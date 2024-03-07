@@ -1,1 +1,1 @@
-type scaleFn = (val: number) => number;
+export type scaleFn = (val: number) => number;

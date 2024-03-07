@@ -1,27 +1,42 @@
+import Transform2d from "../../common/transform";
+import Vector2d from "../../common/vector";
 import { CollisionInfo } from "../../physics/types";
+import { Renderer } from "../../renderer/types";
 import { Component, GameObject, Scene } from "./types";
 
 //default game object class that most if not all game objects extend
 abstract class DefaultGameObject implements GameObject {
   components: Component[];
+  transform: Transform2d;
   scene: Scene;
   tag: string;
-  x: number;
-  y: number;
-  velocity: { x: number; y: number };
+  pos: Vector2d;
+  velocity: Vector2d;
+  vertices: Vector2d[];
   mass: number;
 
   constructor(tag: string, scene: Scene) {
     console.log(`Initialized ${tag}`);
     this.tag = tag;
     this.components = [];
-    this.velocity = { x: 0, y: 0 };
+    this.velocity = new Vector2d(0, 0);
     this.mass = 0;
     this.scene = scene;
+    this.vertices = [];
+    this.transform = new Transform2d(scene);
+    this.pos = new Vector2d(0, 0);
   }
 
   initialize() {
     return;
+  }
+  //todo
+  getPos(): Vector2d {
+    return this.pos;
+  }
+
+  getTransform(): Transform2d {
+    return this.transform;
   }
 
   getScene(): Scene {
@@ -33,23 +48,27 @@ abstract class DefaultGameObject implements GameObject {
   }
 
   getX(): number {
-    return this.x;
+    return this.pos.x;
   }
 
   setX(x: number) {
-    this.x = x;
+    this.pos.setX(x);
   }
 
   getY(): number {
-    return this.y;
+    return this.pos.y;
   }
 
   setY(y: number) {
-    this.y = y;
+    this.pos.setY(y);
   }
 
   getTag(): string {
     return this.tag;
+  }
+
+  getVertices(): Vector2d[] {
+    return this.vertices;
   }
 
   setMass(mass: number) {
@@ -64,8 +83,8 @@ abstract class DefaultGameObject implements GameObject {
     return this.velocity;
   }
 
-  setVelocity(x: number, y: number) {
-    this.velocity = { x, y };
+  setVelocity(v: Vector2d) {
+    this.velocity = v;
   }
 
   fixedUpdate() {
@@ -74,6 +93,14 @@ abstract class DefaultGameObject implements GameObject {
 
   update(time: number) {
     return;
+  }
+
+  draw(): void {
+    return;
+  }
+
+  getRenderer(): Renderer {
+    return this.scene.getRenderer();
   }
 
   getComponent<T>(): T {

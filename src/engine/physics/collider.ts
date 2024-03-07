@@ -1,12 +1,12 @@
 import DefaultComponent from "../component/defaults/component";
-import { GameObject, Scene } from "../component/defaults/types";
+import { Scene } from "../component/defaults/types";
 import { CircleObject } from "../component/types";
-import { CircleCollider, CollisionInfo } from "./types";
+import { CircleCollider } from "./types";
 
-// interface CircleColliderParams {
-//   distFn: (o: GameObject) => number;
-// }
+//circle circle collisions
 
+//TODO - broad detection algorithm on the scene instead of passing the entire scene
+// Should work fine with small number of scene objects
 class DefaultCircleCollider extends DefaultComponent implements CircleCollider {
   scene: Scene;
   radius: number;
@@ -29,6 +29,10 @@ class DefaultCircleCollider extends DefaultComponent implements CircleCollider {
     this.radius = r;
   }
 
+  getCollisions(): CircleObject[] {
+    return this.collisions;
+  }
+
   checkForRemovedItems() {
     const toRemoveIndices: number[] = [];
     const items = this.scene.getGameObjectsByTag<CircleObject>(this.filterTag);
@@ -41,11 +45,11 @@ class DefaultCircleCollider extends DefaultComponent implements CircleCollider {
 
     //remove
     toRemoveIndices.forEach((index) => {
+      this.collisions.splice(index, 1);
       //call proper exit
       this.gameObject.onCollisionExit({
         collidingObject: this.collisions[index],
       });
-      this.collisions.splice(index, 1);
     });
   }
 

@@ -1,7 +1,8 @@
+import Transform2d from "../../common/transform";
+import Vector2d from "../../common/vector";
+import Vertex2D from "../../common/vector";
 import { CollisionInfo } from "../../physics/types";
 import { Renderer } from "../../renderer/types";
-
-type Constructor<T> = new (...args: any[]) => T;
 
 export interface Taggable {
   getTag(): string;
@@ -16,14 +17,17 @@ export interface LifeCycle {
 export interface PhysicalObject {
   setMass(mass: number): void;
   getMass(): number;
-  getVelocity(): { x: number; y: number };
-  setVelocity(x: number, y: number): void;
+  getVelocity(): Vertex2D;
+  setVelocity(vel: Vertex2D): void;
   onCollisionEnter: (collision: CollisionInfo) => void;
   onCollisionExit: (collision: CollisionInfo) => void;
+  getVertices(): Vertex2D[];
   getX(): number;
   setX(x: number): void;
   getY(): number;
   setY(y: number): void;
+  getPos(): Vector2d;
+  getTransform(): Transform2d;
 }
 
 //in world game object
@@ -32,6 +36,8 @@ export interface GameObject extends LifeCycle, PhysicalObject, Taggable {
   removeComponentByTag: (tag: string) => void;
   getComponentByTag<T>(tag: string): T;
   getComponentsByTag(tag: string): Component[];
+  draw(): void;
+  getRenderer(): Renderer;
   getScene(): Scene;
   setScene(scene: Scene): void;
   destroy(): void;

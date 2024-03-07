@@ -1,28 +1,29 @@
+import Vector2d from "../../engine/common/vector";
 import DefaultComponent from "../../engine/component/defaults/component";
 
 class PlayerController extends DefaultComponent {
-  movement: { x: number; y: number };
+  movement: Vector2d;
   speed: number;
 
   constructor() {
     super("player-controller");
-    this.movement = { x: 0, y: 0 };
+    this.movement = new Vector2d(0, 0);
     this.speed = 50; //m/s
   }
   //TODO - switch case - handle double inputs
   initialize() {
     window.addEventListener("keydown", (e) => {
       if (e.code === "KeyW") {
-        this.movement = { x: this.movement.x, y: 1 };
+        this.movement.setY(-1);
       }
       if (e.code === "KeyS") {
-        this.movement = { x: this.movement.x, y: -1 };
+        this.movement.setY(1);
       }
       if (e.code === "KeyD") {
-        this.movement = { x: 1, y: this.movement.y };
+        this.movement.setX(1);
       }
       if (e.code === "KeyA") {
-        this.movement = { x: -1, y: this.movement.y };
+        this.movement.setX(-1);
       }
       if (e.code === "ShiftLeft") {
         this.speed = 80;
@@ -30,17 +31,11 @@ class PlayerController extends DefaultComponent {
     });
 
     window.addEventListener("keyup", (e) => {
-      if (e.code === "KeyW") {
-        this.movement = { x: this.movement.x, y: 0 };
+      if (e.code === "KeyW" || e.code === "KeyS") {
+        this.movement.setY(0);
       }
-      if (e.code === "KeyS") {
-        this.movement = { x: this.movement.x, y: 0 };
-      }
-      if (e.code === "KeyD") {
-        this.movement = { x: 0, y: this.movement.y };
-      }
-      if (e.code === "KeyA") {
-        this.movement = { x: 0, y: this.movement.y };
+      if (e.code === "KeyD" || e.code === "KeyA") {
+        this.movement.setX(0);
       }
       if (e.code === "ShiftLeft") {
         this.speed = 50;
@@ -49,23 +44,24 @@ class PlayerController extends DefaultComponent {
   }
 
   update(time: number) {
+    const newVel = this.gameObject.getVelocity();
     if (this.movement.y === 1) {
-      this.gameObject.setVelocity(this.gameObject.getVelocity().x, -this.speed);
+      newVel.setY(-this.speed);
     } else if (this.movement.y === -1) {
-      this.gameObject.setVelocity(this.gameObject.getVelocity().x, this.speed);
+      newVel.setY(this.speed);
     }
 
     if (this.movement.x === 1) {
-      this.gameObject.setVelocity(this.speed, this.gameObject.getVelocity().y);
+      newVel.setX(this.speed);
     } else if (this.movement.x === -1) {
-      this.gameObject.setVelocity(-this.speed, this.gameObject.getVelocity().y);
+      newVel.setX(-this.speed);
     }
 
     if (this.movement.x === 0) {
-      this.gameObject.setVelocity(0, this.gameObject.getVelocity().y);
+      newVel.setX(0);
     }
     if (this.movement.y === 0) {
-      this.gameObject.setVelocity(this.gameObject.getVelocity().x, 0);
+      newVel.setY(0);
     }
   }
 }

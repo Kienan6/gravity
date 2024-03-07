@@ -1,3 +1,4 @@
+import Vector2d from "../common/vector";
 import DefaultComponent from "../component/defaults/component";
 import { GameObject, PhysicalObject } from "../component/defaults/types";
 
@@ -37,10 +38,10 @@ class GravityPhysics extends DefaultComponent {
 
         const accelerationX = (normalX / o.getMass()) * force; //force / mass = acceleration
         const accerationY = (normalY / o.getMass()) * force;
-
-        o.setVelocity(-accelerationX * time, -accerationY * time);
+        const newVel = new Vector2d(-accelerationX * time, -accerationY * time);
+        o.setVelocity(newVel);
       } else {
-        o.setVelocity(0, 0);
+        o.setVelocity(new Vector2d(0, 0));
       }
     });
   }

@@ -1,7 +1,7 @@
 import Gravity from "./core/gravity";
 
 function main() {
-  let game = new Gravity(80);
+  let game = new Gravity(0);
   game.start();
   //while (document.getElementById("root") === null) {setTimeout(() => {return}, 1000)}
   window.addEventListener("keydown", (e) => {

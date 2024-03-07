@@ -15,7 +15,10 @@ class DefaultScene implements Scene {
     this.gameObjects.forEach((g) => g.initialize());
   }
   update(time: number): void {
-    this.gameObjects.forEach((g) => g.update(time));
+    this.gameObjects.forEach((g) => {
+      g.update(time);
+      g.draw();
+    });
   }
   fixedUpdate(): void {
     this.gameObjects.forEach((g) => g.fixedUpdate());
@@ -24,6 +27,7 @@ class DefaultScene implements Scene {
     return this.gameObjects;
   }
   addGameObject(object: GameObject): void {
+    object.initialize();
     this.gameObjects.push(object);
   }
   removeGameObject(obj: GameObject): void {
